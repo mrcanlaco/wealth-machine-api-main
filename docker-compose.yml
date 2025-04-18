@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7.2-alpine
+    container_name: wealth_machine_redis
+    ports:
+      - "6379:6379"
+    command: redis-server /usr/local/etc/redis/redis.conf --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    restart: unless-stopped
+    networks:
+      - wealth_machine_network
+
+volumes:
+  redis_data:
+    name: wealth_machine_redis_data
+
+networks:
+  wealth_machine_network:
+    name: wealth_machine_network
+    driver: bridge
